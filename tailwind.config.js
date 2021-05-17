@@ -11,6 +11,10 @@ module.exports = {
         3: "3 3 0%",
         7: "7 7 0%",
       },
+      marginl: {
+        important: true,
+        marginLeft: "5px",
+      },
     },
   },
   variants: {

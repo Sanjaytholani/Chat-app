@@ -10,9 +10,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="flex flex-row w-screen">
-        <div className="flex-3">
-          <Sidebar />
-        </div>
+        <Sidebar />
         <div className="flex-7 flex-row">
           <h1>Hi</h1>
         </div>
