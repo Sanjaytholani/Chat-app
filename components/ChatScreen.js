@@ -105,9 +105,9 @@ const ChatScreen = ({ chat, messages }) => {
           <DotsVerticalIcon className="h-5 w-5 text-gray-500" />
         </div>
       </div>
-      <div className="h-[90%] overflow-y-auto bg-[#e5ded8] p-7">
+      <div className="h-[85%] overflow-y-auto bg-[#e5ded8] p-7">
         {showMessages()}
-        <div className="mb-12" ref={endOfMessage} />
+        <div className="mb-4" ref={endOfMessage} />
       </div>
       <form className="flex items-center p-4 sticky z-10 bg-white bottom-0">
         <EmojiHappyIcon className="h-4 w-4" />
