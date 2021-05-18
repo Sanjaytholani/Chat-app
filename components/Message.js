@@ -2,7 +2,7 @@ import moment from "moment";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../firebase";
 
-const Message = ({ user, message }) => {
+const Message = ({ user, message, language }) => {
   const [userLoggedIn] = useAuthState(auth);
   const TypeOfMessage = user === userLoggedIn.email ? "sender" : "reciver";
   return (
@@ -14,7 +14,7 @@ const Message = ({ user, message }) => {
             : "text-left bg-whiteSmoke"
         }`}
       >
-        <h1>{message?.message}</h1>
+        <h1>{message?.translations?.[language]}</h1>
         <h3 className="text-[9px] text-gray-500 text-right">
           {message.timestamp ? moment(message.timestamp).format("LT") : "..."}
         </h3>

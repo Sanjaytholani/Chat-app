@@ -13,13 +13,14 @@ import TimeAgo from "timeago-react";
 import getRecipientEmail from "../utils/getRecipientEmail";
 import Message from "./Message";
 import firebase from "firebase";
+import { v4 } from "uuid";
 
 const ChatScreen = ({ chat, messages }) => {
   const [user] = useAuthState(auth);
   const router = useRouter();
   const endOfMessage = useRef(null);
   const [input, setInput] = useState("");
-
+  const [language, setLanguage] = useState("en");
   const [recipientSnapshot] = useCollection(
     db
       .collection("users")
@@ -43,11 +44,17 @@ const ChatScreen = ({ chat, messages }) => {
             ...message.data(),
             timestamp: message.data().timestamp?.toDate().getTime(),
           }}
+          language={language}
         />
       ));
     } else {
       return JSON.parse(messages).map((message) => (
-        <Message key={message.id} user={message.user} message={message} />
+        <Message
+          key={message.id}
+          user={message.user}
+          message={message}
+          language={language}
+        />
       ));
     }
   };
@@ -59,24 +66,62 @@ const ChatScreen = ({ chat, messages }) => {
   };
   const sendMessage = (e) => {
     e.preventDefault();
-
+    setUid(v4().toString());
     db.collection("users").doc(user.uid).set(
       {
         lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
       },
       { merge: true }
     );
-
-    db.collection("chats").doc(router.query.id).collection("messages").add({
-      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-      message: input,
-      user: user.email,
-      photoURL: user.photoURL,
-    });
+    // db.collection("messages")
+    //   .doc(uid)
+    //   .set({
+    //     message: input,
+    //   })
+    //   .then(() => {
+    //     db.collection("messages")
+    //       .doc(uid)
+    //       .onSnapshot((snapshot) => {
+    //         db.collection("chats")
+    //           .doc(router.query.id)
+    //           .collection("messages")
+    //           .add({
+    //             timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+    //             message: input,
+    //             user: user.email,
+    //             photoURL: user.photoURL,
+    //             translations: snapshot.data()?.translated,
+    //           });
+    //       });
+    //   });
+    if (input.length > 0) {
+      db.collection("messages")
+        ?.add({
+          message: input,
+        })
+        .then((data) => {
+          data.onSnapshot((snapshot) =>
+            db
+              .collection("chats")
+              .doc(router.query.id)
+              .collection("messages")
+              .add({
+                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                message: input,
+                user: user.email,
+                photoURL: user.photoURL,
+                translations: snapshot?.data()?.translated,
+              })
+          );
+        });
+    }
 
     setInput("");
 
     scrollToBottom();
+  };
+  const handleLanguageChange = (e) => {
+    setLanguage(e.target.value);
   };
   return (
     <div className="flex-7 h-screen">
@@ -101,6 +146,11 @@ const ChatScreen = ({ chat, messages }) => {
           </div>
         </div>
         <div className="flex space-x-2">
+          <select value={language} onChange={handleLanguageChange}>
+            <option value="en">English</option>
+            <option value="hi">Hindi</option>
+            <option value="ta">Tamil</option>
+          </select>
           <PaperClipIcon className="h-5 w-5 text-gray-500" />
           <DotsVerticalIcon className="h-5 w-5 text-gray-500" />
         </div>
