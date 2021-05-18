@@ -13,7 +13,6 @@ import TimeAgo from "timeago-react";
 import getRecipientEmail from "../utils/getRecipientEmail";
 import Message from "./Message";
 import firebase from "firebase";
-import { v4 } from "uuid";
 
 const ChatScreen = ({ chat, messages }) => {
   const [user] = useAuthState(auth);
