@@ -65,7 +65,6 @@ const ChatScreen = ({ chat, messages }) => {
   };
   const sendMessage = (e) => {
     e.preventDefault();
-    setUid(v4().toString());
     db.collection("users").doc(user.uid).set(
       {
         lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
@@ -99,19 +98,20 @@ const ChatScreen = ({ chat, messages }) => {
           message: input,
         })
         .then((data) => {
-          data.onSnapshot((snapshot) =>
-            db
-              .collection("chats")
-              .doc(router.query.id)
-              .collection("messages")
-              .add({
-                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-                message: input,
-                user: user.email,
-                photoURL: user.photoURL,
-                translations: snapshot?.data()?.translated,
-              })
-          );
+          data.onSnapshot((snapshot) => {
+            if (snapshot.data()?.translated) {
+              db.collection("chats")
+                .doc(router.query.id)
+                .collection("messages")
+                .add({
+                  timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                  message: input,
+                  user: user.email,
+                  photoURL: user.photoURL,
+                  translations: snapshot?.data()?.translated,
+                });
+            }
+          });
         });
     }
 
