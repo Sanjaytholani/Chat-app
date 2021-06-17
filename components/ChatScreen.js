@@ -71,48 +71,13 @@ const ChatScreen = ({ chat, messages }) => {
       },
       { merge: true }
     );
-    // db.collection("messages")
-    //   .doc(uid)
-    //   .set({
-    //     message: input,
-    //   })
-    //   .then(() => {
-    //     db.collection("messages")
-    //       .doc(uid)
-    //       .onSnapshot((snapshot) => {
-    //         db.collection("chats")
-    //           .doc(router.query.id)
-    //           .collection("messages")
-    //           .add({
-    //             timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-    //             message: input,
-    //             user: user.email,
-    //             photoURL: user.photoURL,
-    //             translations: snapshot.data()?.translated,
-    //           });
-    //       });
-    //   });
     if (input.length > 0) {
-      db.collection("messages")
-        ?.add({
-          message: input,
-        })
-        .then((data) => {
-          data.onSnapshot((snapshot) => {
-            if (snapshot.data()?.translated) {
-              db.collection("chats")
-                .doc(router.query.id)
-                .collection("messages")
-                .add({
-                  timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-                  message: input,
-                  user: user.email,
-                  photoURL: user.photoURL,
-                  translations: snapshot?.data()?.translated,
-                });
-            }
-          });
-        });
+      db.collection("chats").doc(router.query.id).collection("messages").add({
+        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+        message: input,
+        user: user.email,
+        photoURL: user.photoURL,
+      });
     }
 
     setInput("");

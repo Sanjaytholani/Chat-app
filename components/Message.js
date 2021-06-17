@@ -14,7 +14,11 @@ const Message = ({ user, message, language }) => {
             : "text-left bg-whiteSmoke"
         }`}
       >
-        <h1>{message?.translations?.[language]}</h1>
+        <h1>
+          {message?.translated?.[language]
+            ? message?.translated?.[language]
+            : message.message}
+        </h1>
         <h3 className="text-[9px] text-gray-500 text-right">
           {message.timestamp ? moment(message.timestamp).format("LT") : "..."}
         </h3>

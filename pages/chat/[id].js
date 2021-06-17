@@ -7,7 +7,7 @@ import getRecipientEmail from "../../utils/getRecipientEmail";
 
 const Chat = ({ chat, messages }) => {
   const [user] = useAuthState(auth);
-
+  console.log(user);
   return (
     <div className="flex">
       <Head>

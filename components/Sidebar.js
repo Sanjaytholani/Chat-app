@@ -38,11 +38,15 @@ const Sidebar = () => {
   return (
     <div className="flex-3 border-r-2 border-whiteSmoke h-full">
       <div className="flex flex-row top-0 sticky z-10 bg-white justify-between items-center p-2 h-16 border-b-2 border-whiteSmoke">
-        <img
-          src={user.photoURL}
-          className="h-12 w-12 rounded-full cursor-pointer"
-          onClick={() => auth.signOut()}
-        />
+        {user?.photoURL ? (
+          <img
+            src={user?.photoURL}
+            className="h-12 w-12 rounded-full cursor-pointer"
+            onClick={() => auth.signOut()}
+          />
+        ) : (
+          ""
+        )}
         <div className="flex flex-row space-x-2">
           <AnnotationIcon className="h-7 w-7" />
           <DotsVerticalIcon className="h-7 w-7" />
