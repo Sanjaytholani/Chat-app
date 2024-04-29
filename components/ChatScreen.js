@@ -46,15 +46,6 @@ const ChatScreen = ({ chat, messages }) => {
           language={language}
         />
       ));
-    } else {
-      return JSON.parse(messages).map((message) => (
-        <Message
-          key={message.id}
-          user={message.user}
-          message={message}
-          language={language}
-        />
-      ));
     }
   };
   const scrollToBottom = () => {
